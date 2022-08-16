@@ -20,9 +20,9 @@ function sendEmail($sendTo, $subject, $body){
     $mail->Host = "smtp-relay.sendinblue.com";
     $mail->Port = 587;
     $mail->IsHTML(true);
-    $mail->Username = "simonbrebeck@yahoo.de";
-    $mail->Password = "FHC0nL1XfSwKtNdP";
-    $mail->SetFrom("no-reply@calendar.simonbrebeck.de", "Kalender App");
+    $mail->Username = "email";
+    $mail->Password = "password";
+    $mail->SetFrom("sender", "Kalender App");
     $mail->Subject = $subject;
     $mail->Body = $body;
     $mail->AddAddress($sendTo['email'], $sendTo['firstname'] . " " . $sendTo['lastname']);
