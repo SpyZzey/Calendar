@@ -6,6 +6,7 @@ $isLoggedIn = isLoggedIn();
 if($isLoggedIn) {
     $firstname = $_SESSION['firstname'];
     $lastname = $_SESSION['lastname'];
+    $email = $_SESSION['email'];
 }
 
 ?>
@@ -370,9 +371,9 @@ if($isLoggedIn) {
             </div>
             <div class="modal-body">
                 <div class="profile-overview">
-                    <img class="non-interactable" src="<?php get_profile_picture($_SESSION['user_id']);?>" alt="user_profile_picture">
-                    <h2 class="center-text margin-top"><?= ($firstname ?? "") . " " . ($lastname ?? ""); ?></h2>
-                    <h3 class="center-text"><?= ("(" . $_SESSION['email'] . ")") ?? ""?></h3>
+                    <?php if(isset($_SESSION['user_id'])) {?><img class="non-interactable" src="<?php get_profile_picture($_SESSION['user_id']);?>" alt="user_profile_picture"/> <?php } ?>
+                    <h2 class="center-text margin-top"><?php if(isset($firstname) && isset($lastname)) echo " - " . $firstname . " " . $lastname; ?></h2>
+                    <h3 class="center-text"><?php if(isset($email)) echo "(" . $email . ")"; ?></h3>
                 </div>
             </div>
             <div class="modal-footer right-flow">
