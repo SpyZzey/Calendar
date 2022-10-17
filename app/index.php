@@ -4,9 +4,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/lib/php/get_file.php';
 
 $isLoggedIn = isLoggedIn();
 if($isLoggedIn) {
-    $firstname = $_SESSION['firstname'];
-    $lastname = $_SESSION['lastname'];
-    $email = $_SESSION['email'];
+    $firstname = htmlspecialchars($_SESSION['firstname'], ENT_QUOTES);
+    $lastname = htmlspecialchars($_SESSION['lastname'], ENT_QUOTES);
+    $email = htmlspecialchars($_SESSION['email'], ENT_QUOTES);
+    $theme = htmlspecialchars($_SESSION['theme'], ENT_QUOTES) ?? 'light';
+} else {
+    $theme = 'light';
 }
 
 ?>
@@ -16,15 +19,16 @@ if($isLoggedIn) {
         <title>Kalender <?php if(isset($firstname) && isset($lastname)) echo " - " . $firstname . " " . $lastname; ?></title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"/>
+        <link rel="stylesheet" href="/lib/css/themes/theme--<?= $theme; ?>.css">
         <link rel="stylesheet" href="/lib/css/styles.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
         <link rel="stylesheet" href="/lib/css/library/coloris.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script src="/lib/js/utils.js" defer></script>
         <script src="/lib/js/user.js" defer></script>
         <script src="/lib/js/modal.js" defer></script>
         <script src="/lib/js/calendar.js" defer></script>
         <script src="/lib/js/calendar_design.js" defer></script>
-        <script src="/lib/js/utils.js" defer></script>
         <script src="/lib/js/library/coloris.min.js"></script>
 
         <svg style="display: none;" class="checkbox-symbol">
@@ -57,6 +61,11 @@ if($isLoggedIn) {
                 </div>
             </div>
         </div>
+        <div class="banner error hidden">
+            <div class="banner-icon"><i class="material-icons">error</i></div>
+            <span class="banner-text">Passwort oder Email ist falsch!</span>
+            <div class="banner-close"><i class="material-icons">close</i></div>
+        </div>
         <div id="content">
             <main id="main-content" class="panel">
                 <div id="calendar">
@@ -78,7 +87,7 @@ if($isLoggedIn) {
                         <?php }?>
                     </div>
                     <div id="calendar-body" >
-                        <div class="flex--stretch calendar-grid">
+                        <div class="calendar-grid">
                             <div class="calendar-grid-header">
                                 <div>Mo</div>
                                 <div>Di</div>
@@ -90,12 +99,6 @@ if($isLoggedIn) {
                             </div>
                             <div id="calendar-date-days" class="calendar-grid-content keep-border-box">
                                 <!--DRAW-->
-                                <div class="cal-event-container cal-event-container--test relative">
-                                    <div class="cal-event cal-event--test" style="margin-top: 30px;">Test</div>
-                                </div>
-                                <div class="cal-event-container cal-event-container--test2 relative">
-                                    <div class="cal-event cal-event--test" style="margin-top: 55px;">Test</div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -184,71 +187,9 @@ if($isLoggedIn) {
                         <input id="event-add-color" type="text" class="coloris non-selectable" value="#888" />
                     </div>
                 </div>
-                <!---
-                <div class="item">
-                    <div class="item-header">
-                        <i class="material-icons">checklist</i>
-                        <div class="name">Checkliste</div>
-                    </div>
-                    <div class="description">
-                        <div class="checkbox-container">
-                            <div>
-                                <input class="checkbox-input" id="checkbox_list1_1" type="checkbox"/>
-                                <label class="checkbox" for="checkbox_list1_1">
-                                    <span>
-                                      <svg width="12px" height="10px">
-                                          <use xlink:href="#check" class="checked-polyline"></use>
-                                          <use xlink:href="#indeterminate" class="indeterminate-polyline"></use>
-                                      </svg>
-                                    </span>
-                                </label>
-                            </div>
-                            <div class="checkbox-description">
-                                Test
-                            </div>
-                        </div>
-                        <div class="checkbox-container">
-                            <div>
-                                <input class="checkbox-input" id="checkbox_list1_2" type="checkbox"/>
-                                <label class="checkbox" for="checkbox_list1_2">
-                                <span>
-                                  <svg width="12px" height="10px">
-                                      <use xlink:href="#check" class="checked-polyline"></use>
-                                      <use xlink:href="#indeterminate" class="indeterminate-polyline"></use>
-                                  </svg>
-                                </span>
-                                </label>
-                            </div>
-                            <div class="checkbox-description">
-                                Test
-                            </div>
-                        </div>
-                        <div class="checkbox-container">
-                            <div>
-                                <input class="checkbox-input" id="checkbox_list1_3" type="checkbox"/>
-                                <label class="checkbox" for="checkbox_list1_3">
-                            <span>
-                              <svg width="12px" height="10px">
-                                  <use xlink:href="#check" class="checked-polyline"></use>
-                                  <use xlink:href="#indeterminate" class="indeterminate-polyline"></use>
-                              </svg>
-                            </span>
-                                </label>
-                            </div>
-                            <div class="checkbox-description">
-                                Herr Adidas - Raum B15<br>
-                                Gespräch über verschiedene Unannehmlichkeiten<br>
-                                <br>
-                                Lorem ipsum xyz <br>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                --->
-
             </div>
             <div class="modal-footer spaced">
-                <button id="event-add-submit" class="button button--icon-text">
+                <button id="event-add-submit" data-action="create" data-event_id="-1" class="button button--icon-text">
                     <i class="material-icons">check</i>
                     <span>Speichern</span>
                 </button>
@@ -276,25 +217,17 @@ if($isLoggedIn) {
                         <div class="name">Beschreibung</div>
                     </div>
                     <div id="event-description" class="description">
-                        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, se
-                        d diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-                        sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
-                        clita kasd gubergren
-
-                        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, se
-                        d diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-                        sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
-                        clita kasd gubergren
+                        Beschreibung
                     </div>
                 </div>
 
             </div>
             <div class="modal-footer spaced">
-                <button class="button button--icon-text">
+                <button id='button-event-edit' class="button button--icon-text">
                     <i class="material-icons">edit</i>
                     <span>Bearbeiten</span>
                 </button>
-                <button class="button button--icon-text">
+                <button id='button-event-delete' class="button button--icon-text">
                     <i class="material-icons red">delete</i>
                     <span class="red">Löschen</span>
                 </button>
@@ -372,18 +305,21 @@ if($isLoggedIn) {
             <div class="modal-body">
                 <div class="profile-overview">
                     <?php if(isset($_SESSION['user_id'])) {?><img class="non-interactable" src="<?php get_profile_picture($_SESSION['user_id']);?>" alt="user_profile_picture"/> <?php } ?>
-                    <h2 class="center-text margin-top"><?php if(isset($firstname) && isset($lastname)) echo " - " . $firstname . " " . $lastname; ?></h2>
+                    <h2 class="center-text margin-top"><?php if(isset($firstname) && isset($lastname)) echo $firstname . " " . $lastname; ?></h2>
                     <h3 class="center-text"><?php if(isset($email)) echo "(" . $email . ")"; ?></h3>
                 </div>
             </div>
             <div class="modal-footer right-flow">
                 <button class="button--text" onclick="location.href='/app/logout/'">Logout</button>
-                <button class="button-icon--round"><i class="material-icons">dark_mode</i></button>
+                <button id="button--switch-theme" class="button-icon--round">
+                    <i id="button--theme-dark" class="material-icons <?php if($theme == 'light') echo 'hidden';?>">dark_mode</i>
+                    <i id="button--theme-light" class="material-icons <?php if($theme == 'dark') echo 'hidden';?>">light_mode</i>
+                </button>
             </div>
         </div>
         <div id="modal-scrim" class="<?php if(!$isLoggedIn) echo "show";?>"></div>
         <script>
-
+            sessionStorage.setItem('theme', '<?php echo $theme;?>');
             Coloris({
                 el: '.coloris',
                 themeMode: 'light', // light, dark, auto

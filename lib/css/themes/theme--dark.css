@@ -1,0 +1,16 @@
+:root {
+    --main-color-light: 55, 55, 55;
+    --main-color: 50, 50, 50;
+    --main-color-dark: 40, 40, 40;
+    --on-main-color: 255, 255, 255;
+    --primary-color: 76, 198, 236;
+    --primary-color-dark: 40, 165, 205;
+    --secondary-color: 255, 211, 36;
+    --secondary-color-dark: 245, 200, 34;
+    --on-primary-color: 255, 255, 255;
+    --on-secondary-color: 0, 0, 0;
+    --primary-hover: 218, 218, 218;
+}
+input {
+    color-scheme: dark;
+}

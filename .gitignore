@@ -1,2 +1,4 @@
+/lib/php/database/safemysql.class.php
+/lib/php/mailer.php
 /app/test.php
 /lib/php/extern/
