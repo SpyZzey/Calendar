@@ -65,6 +65,9 @@
  * $data = $db->getAll("SELECT * FROM table WHERE ?p", $bar, $sqlpart);
  *
  */
+require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
+
+use Dotenv\Dotenv;
 
 class SafeMySQL
 {
@@ -74,7 +77,7 @@ class SafeMySQL
     protected $emode;
     protected $exname;
 
-    protected $defaults = array(
+    protected array $defaults = array(
         'host'      => "127.0.0.1",
         'user'      => "user",
         'pass'      => "password",
@@ -92,6 +95,15 @@ class SafeMySQL
 
     function __construct($opt = array())
     {
+
+        $dotenv = Dotenv::createImmutable($_SERVER['DOCUMENT_ROOT'] . '/_secure');
+        $dotenv->safeLoad();
+        $opt['user'] = $_ENV['DB_USERNAME'];
+        $opt['pass'] = $_ENV['DB_PASSWORD'];
+        $opt['db'] = $_ENV['DB_DATABASE'];
+        $opt['host'] = $_ENV['DB_HOST'];
+        $opt['port'] = $_ENV['DB_PORT'];
+
         $opt = array_merge($this->defaults,$opt);
 
         $this->emode  = $opt['errmode'];

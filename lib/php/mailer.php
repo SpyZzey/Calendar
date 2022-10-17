@@ -1,15 +1,17 @@
 <?php
-use PHPMailer\PHPMailer\PHPMailer;
+require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
+
+use Dotenv\Dotenv;
 use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
 /**
  * @throws Exception
  */
 function sendEmail($sendTo, $subject, $body){
-    require $_SERVER['DOCUMENT_ROOT'] . '/lib/php/extern/PHPMailer/src/Exception.php';
-    require $_SERVER['DOCUMENT_ROOT'] . '/lib/php/extern/PHPMailer/src/PHPMailer.php';
-    require $_SERVER['DOCUMENT_ROOT'] . '/lib/php/extern/PHPMailer/src/SMTP.php';
+    $dotenv = Dotenv::createImmutable($_SERVER['DOCUMENT_ROOT'] . '/_secure');
+    $dotenv->safeLoad();
 
     $mail = new PHPMailer();
     $mail->IsSMTP();
@@ -17,12 +19,12 @@ function sendEmail($sendTo, $subject, $body){
     $mail->Encoding  = 'base64';
     $mail->SMTPDebug = 1;
     $mail->SMTPAuth = true;
-    $mail->Host = "smtp-relay.sendinblue.com";
+    $mail->Host = $_ENV['SMTP_HOST'];
     $mail->Port = 587;
     $mail->IsHTML(true);
-    $mail->Username = "email";
-    $mail->Password = "password";
-    $mail->SetFrom("sender", "Kalender App");
+    $mail->Username = $_ENV['SMTP_USERNAME'];
+    $mail->Password = $_ENV['SMTP_PASSWORD'];
+    $mail->SetFrom($_ENV['SMTP_SENDER'], "Kalender App");
     $mail->Subject = $subject;
     $mail->Body = $body;
     $mail->AddAddress($sendTo['email'], $sendTo['firstname'] . " " . $sendTo['lastname']);
