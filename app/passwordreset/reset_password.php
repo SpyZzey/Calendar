@@ -4,7 +4,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/lib/php/database/safemysql.class.php'
 // Deny access to this page if there is no user_id and key given
 if(!isset($_POST['user_id']) || !isset($_POST['key'])) {
     http_response_code(404);
-    return;
+    exit;
 };
 
 $key = htmlspecialchars($_POST['key'], ENT_QUOTES);

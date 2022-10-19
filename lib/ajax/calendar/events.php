@@ -35,9 +35,6 @@
         }
 
         $sql = "SELECT calendar_id, name, description, start_time, end_time, event_color, type
-                FROM calendar_events WHERE user_id = ?i AND ((YEAR(start_time) <= ?i AND MONTH(start_time) <= ?i) OR (YEAR(start_time) <= ?i AND MONTH(start_time) <= ?i))
-                AND ((YEAR(end_time) >= ?i AND MONTH(end_time) >= ?i) OR (YEAR(end_time) >= ?i AND MONTH(end_time) >= ?i))";
-        $sql = "SELECT calendar_id, name, description, start_time, end_time, event_color, type
                 FROM calendar_events WHERE user_id = ?i AND 
                 ((YEAR(start_time) >= ?i AND MONTH(start_time) >= ?i AND YEAR(start_time) <= ?i AND MONTH(start_time) <= ?i)
                 OR (YEAR(start_time) <= ?i AND MONTH(start_time) <= ?i AND YEAR(end_time) >= ?i AND MONTH(end_time) >= ?i)

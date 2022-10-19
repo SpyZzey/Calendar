@@ -31,19 +31,22 @@ $sql = "INSERT INTO email_verification (user_id, key_value, verification_date, v
 $db->query($sql, $user['id'], $token);
 
 $verification_link = "{$_SERVER['HTTP_HOST']}/app/register?user_id={$user['id']}&key={$token}";
-sendEmail($user, "Kalender - Email bestätigen", "
-<html>
-    <body>
-        Hallo {$firstname},<br>
-        <br>
-        bitte klicken Sie auf den folgenden Link oder kopieren ihn in die Adresszeile, um den Registrierungsprozess abzuschließen.<br>
-        Sie haben 24 Stunden Zeit den Registrierungsvorgang abzuschließen. Ansonsten wird ihr Konto automatisch gelöscht.<br>
-        <br>
-        <a href='{$verification_link}'>{$verification_link}</a><br>
-        <br>
-        <br>
-        Mit freundlichen Grüßen<br>
-        <br>
-        Simon Brebeck
-    </body>
-</html>");
+try {
+    sendEmail($user, "Kalender - Email bestätigen", "
+    <html>
+        <body>
+            Hallo {$firstname},<br>
+            <br>
+            bitte klicken Sie auf den folgenden Link oder kopieren ihn in die Adresszeile, um den Registrierungsprozess abzuschließen.<br>
+            Sie haben 24 Stunden Zeit den Registrierungsvorgang abzuschließen. Ansonsten wird ihr Konto automatisch gelöscht.<br>
+            <br>
+            <a href='{$verification_link}'>{$verification_link}</a><br>
+            <br>
+            <br>
+            Mit freundlichen Grüßen<br>
+            <br>
+            Simon Brebeck
+        </body>
+    </html>");
+} catch (\PHPMailer\PHPMailer\Exception $e) {
+}

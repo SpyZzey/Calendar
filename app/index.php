@@ -317,6 +317,7 @@ if($isLoggedIn) {
                 </button>
             </div>
         </div>
+
         <div id="modal-scrim" class="<?php if(!$isLoggedIn) echo "show";?>"></div>
         <script>
             sessionStorage.setItem('theme', '<?php echo $theme;?>');
