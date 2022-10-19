@@ -25,7 +25,7 @@ $db->query($sql, $user_id);
 $sql = "INSERT INTO email_verification (user_id, key_value, verification_date, verification_type) VALUES (?s, ?s, CURRENT_TIMESTAMP(), 'password_reset');";
 $db->query($sql, $user['id'], $token);
 
-$verification_link = "192.168.178.29/app/passwordreset?user_id={$user['id']}&key={$token}";
+$verification_link = $_SERVER['HTTP_HOST'] . "/app/passwordreset?user_id={$user['id']}&key={$token}";
 try {
     sendEmail($user, "Kalender - Passwort zurücksetzen", "
     <html>
@@ -45,3 +45,5 @@ try {
     </html>");
 } catch (\PHPMailer\PHPMailer\Exception $e) {
 }
+
+header("Location: /app/info=passwordreset");

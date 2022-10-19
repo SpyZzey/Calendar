@@ -316,6 +316,7 @@ if($isLoggedIn) {
                 </button>
             </div>
         </div>
+
         <div id="modal-scrim" class="<?php if(!$isLoggedIn) echo "show";?>"></div>
         <script src="/lib/js/modal.js"></script>
         <script src="/lib/js/banner.js"></script>

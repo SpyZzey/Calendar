@@ -1,7 +1,7 @@
 <?php
 if(!isset($_GET['user_id']) || !isset($_GET['key'])) {
     http_response_code(404);
-    return;
+    exit;
 };
 ?>
     <!DOCTYPE HTML>
@@ -38,7 +38,3 @@ if(!isset($_GET['user_id']) || !isset($_GET['key'])) {
     </div>
     </body>
     </html>
-
-<?php
-
-?>
