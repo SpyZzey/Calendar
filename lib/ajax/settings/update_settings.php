@@ -18,7 +18,7 @@
             echo "invalid value";
             exit;
         }
-    } else if($_POST['key'] == 'lang'){
+    } else if($_POST['key'] == '_lang'){
         $allowed_values = ['en-US', 'de-DE'];
         if(!in_array($_POST['value'], $allowed_values)) {
             echo "invalid value";

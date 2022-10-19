@@ -1,6 +1,7 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/lib/php/object_storage/ObjectStorageInterface.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lib/php/database/safemysql.class.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/lib/php/object_storage/ObjectStorageInterface.php';
 
 function get_profile_picture($user_id){
     if(isset($user_id)) {

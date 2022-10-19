@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER["DOCUMENT_ROOT"] . '/lib/php/extern/AWS/aws-autoloader.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
 
 use Aws\S3\S3Client;
 use Aws\Result;

@@ -28,7 +28,7 @@ function login($user_login, $user_password) {
                 header("Location: /app?error=not-verified");
             }
         } else {
-            header("Location: /app?error=invalid-credentials");
+            header("Location: /app?error=invalid-login");
         }
     }
 }
@@ -50,7 +50,7 @@ function setUserSessionData($user_data) {
 }
 function setUserSettings($settings) {
     $_SESSION['theme'] = "light";
-    $_SESSION['lang'] = "en-US";
+    $_SESSION['_lang'] = "en-US";
     foreach ($settings as $setting) {
         $_SESSION[$setting['settings_key']] = $setting['settings_value'];
     }

@@ -17,6 +17,13 @@ $firstname = htmlspecialchars($_POST['firstname'], ENT_QUOTES);
 $lastname = htmlspecialchars($_POST['lastname'], ENT_QUOTES);
 
 $db = new SafeMySQL();
+$sql = "SELECT COUNT(email) FROM users WHERE email = ?s";
+$result = $db->getOne($sql, $email);
+//Check if email is already in use
+if($result > 0) {
+    header("Location: /app?error=email-in-use");
+    exit;
+}
 $sql = "INSERT INTO users (email, password, firstname, lastname, verified) VALUES (?s, ?s, ?s, ?s, 0);";
 $db->query($sql, $email, $hashed_password, $firstname, $lastname);
 $user_id = $db->insertId();

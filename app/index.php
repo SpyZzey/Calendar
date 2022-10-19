@@ -26,7 +26,6 @@ if($isLoggedIn) {
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
         <script src="/lib/js/utils.js" defer></script>
         <script src="/lib/js/user.js" defer></script>
-        <script src="/lib/js/modal.js" defer></script>
         <script src="/lib/js/calendar.js" defer></script>
         <script src="/lib/js/calendar_design.js" defer></script>
         <script src="/lib/js/library/coloris.min.js"></script>
@@ -233,7 +232,7 @@ if($isLoggedIn) {
                 </button>
             </div>
         </div>
-        <div id="modal-user-login" class="modal <?php if(!$isLoggedIn) echo "show";?>">
+        <div id="modal-user-login" class="modal">
             <div class="modal-header">
                 <span class="material-icons modal-close">close</span>
             </div>
@@ -319,7 +318,27 @@ if($isLoggedIn) {
         </div>
 
         <div id="modal-scrim" class="<?php if(!$isLoggedIn) echo "show";?>"></div>
+        <script src="/lib/js/modal.js"></script>
+        <script src="/lib/js/banner.js"></script>
         <script>
+            <?php if(!$isLoggedIn) {?>
+                openModal('modal-user-login');
+
+                const urlParams = new URLSearchParams(window.location.search);
+                if(urlParams.has('error')) {
+                    const error = urlParams.get('error');
+                    if(error === 'email-in-use') {
+                        spawnBanner('error', 'Diese Email wird bereits verwendet.');
+                        closeModal('modal-user-login');
+                        openModal('modal-user-register');
+                    } else if(error === 'invalid-login') {
+                        spawnBanner('error', 'Falsche Email oder Passwort.');
+                    } else if(error === 'not-verified') {
+                        spawnBanner('error', 'Dein Account wurde noch nicht verifiziert.');
+                    }
+                }
+            <?php } ?>
+
             sessionStorage.setItem('theme', '<?php echo $theme;?>');
             Coloris({
                 el: '.coloris',
