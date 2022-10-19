@@ -17,6 +17,13 @@ $firstname = htmlspecialchars($_POST['firstname'], ENT_QUOTES);
 $lastname = htmlspecialchars($_POST['lastname'], ENT_QUOTES);
 
 $db = new SafeMySQL();
+$sql = "SELECT COUNT(email) FROM users WHERE email = ?s";
+$result = $db->getOne($sql, $email);
+//Check if email is already in use
+if($result > 0) {
+    header("Location: /app?error=email-in-use");
+    exit;
+}
 $sql = "INSERT INTO users (email, password, firstname, lastname, verified) VALUES (?s, ?s, ?s, ?s, 0);";
 $db->query($sql, $email, $hashed_password, $firstname, $lastname);
 $user_id = $db->insertId();
@@ -31,19 +38,22 @@ $sql = "INSERT INTO email_verification (user_id, key_value, verification_date, v
 $db->query($sql, $user['id'], $token);
 
 $verification_link = "{$_SERVER['HTTP_HOST']}/app/register?user_id={$user['id']}&key={$token}";
-sendEmail($user, "Kalender - Email bestätigen", "
-<html>
-    <body>
-        Hallo {$firstname},<br>
-        <br>
-        bitte klicken Sie auf den folgenden Link oder kopieren ihn in die Adresszeile, um den Registrierungsprozess abzuschließen.<br>
-        Sie haben 24 Stunden Zeit den Registrierungsvorgang abzuschließen. Ansonsten wird ihr Konto automatisch gelöscht.<br>
-        <br>
-        <a href='{$verification_link}'>{$verification_link}</a><br>
-        <br>
-        <br>
-        Mit freundlichen Grüßen<br>
-        <br>
-        Simon Brebeck
-    </body>
-</html>");
+try {
+    sendEmail($user, "Kalender - Email bestätigen", "
+    <html>
+        <body>
+            Hallo {$firstname},<br>
+            <br>
+            bitte klicken Sie auf den folgenden Link oder kopieren ihn in die Adresszeile, um den Registrierungsprozess abzuschließen.<br>
+            Sie haben 24 Stunden Zeit den Registrierungsvorgang abzuschließen. Ansonsten wird ihr Konto automatisch gelöscht.<br>
+            <br>
+            <a href='{$verification_link}'>{$verification_link}</a><br>
+            <br>
+            <br>
+            Mit freundlichen Grüßen<br>
+            <br>
+            Simon Brebeck
+        </body>
+    </html>");
+} catch (\PHPMailer\PHPMailer\Exception $e) {
+}

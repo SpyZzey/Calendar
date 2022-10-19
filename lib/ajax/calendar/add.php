@@ -24,7 +24,7 @@
     $db->query($sql, $userId, $eventName, $eventDesc, $eventStart, $eventEnd, $eventColor, $eventType, $eventAllday);
     $lastId = $db->insertId();
 
-    echo "Inserted: " . $lastId;
+    echo "success: " . $lastId;
 
 
 
