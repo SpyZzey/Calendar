@@ -240,7 +240,8 @@ if($isLoggedIn) {
                 <form action="/lib/php/forms/user_login.php" method="post" class="form-column">
                     <div class="form-header">
                         <h2>Anmelden</h2>
-                        <h4>Du musst dich anmelden.</h4>
+                        <h4>Testnutzer: test@user.de </h4>
+                        <h4> Passwort: test</h4>
                     </div>
                     <div class="form-body">
                         <input type="text" placeholder="Email" name="email" required>

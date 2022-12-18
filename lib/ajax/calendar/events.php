@@ -20,7 +20,6 @@
     } else {
 
 
-        $end_time = $year . "-" . ($month+1) . "-15";
         $start_year = $year;
         $start_month = $month-1;
         $end_year = $year;
@@ -33,13 +32,16 @@
             $end_year = $year + 1;
             $end_month = 1;
         }
+        $end_time = $end_year . "-" . ($end_month) . "-15";
+        $start_time = $start_year . "-" . ($start_month) . "-15";
 
         $sql = "SELECT calendar_id, name, description, start_time, end_time, event_color, type
                 FROM calendar_events WHERE user_id = ?i AND 
-                ((YEAR(start_time) >= ?i AND MONTH(start_time) >= ?i AND YEAR(start_time) <= ?i AND MONTH(start_time) <= ?i)
-                OR (YEAR(start_time) <= ?i AND MONTH(start_time) <= ?i AND YEAR(end_time) >= ?i AND MONTH(end_time) >= ?i)
-                OR (YEAR(end_time) >= ?i AND MONTH(end_time) >= ?i AND YEAR(end_time) <= ?i AND MONTH(end_time) <= ?i))";
-        $events = $db->getAll($sql, $userId, $start_year, $start_month, $end_year, $end_month, $start_year, $start_month, $end_year, $end_month, $start_year, $start_month, $end_year, $end_month);
+                ((start_time <= ?s AND end_time >= ?s) -- Starting before timespan and reaching into timespan --
+                OR (start_time <= ?s AND end_time >= ?s) -- Starting inside timespan and reaching out of timespan --
+                OR (start_time >= ?s AND end_time <= ?s)) -- Starting and ending inside timespan --";
+
+        $events = $db->getAll($sql, $userId, $start_time, $start_time, $end_time, $end_time, $start_time, $end_time);
 
     }
 
